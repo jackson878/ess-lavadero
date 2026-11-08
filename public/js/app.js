@@ -7,6 +7,12 @@
  *
  * 2. Confirmación antes de enviar un formulario:
  *      <form data-confirmar="¿Seguro que desea desactivar este usuario?">
+ *
+ * 3. Mostrar / ocultar bloques con radios:
+ *      <input type="radio" data-mostrar="#bloqueA" data-ocultar="#bloqueB">
+ *
+ * 4. Formato de pesos mientras se escribe:
+ *      <input data-formato-pesos>   25000 -> 25.000
  */
 (function () {
     'use strict';
@@ -48,6 +54,25 @@
             if (!window.confirm(formulario.dataset.confirmar)) {
                 evento.preventDefault();
             }
+        });
+    });
+
+    // ---------- 3. Mostrar / ocultar bloques ----------
+    document.querySelectorAll('input[type="radio"][data-mostrar]').forEach((radio) => {
+        radio.addEventListener('change', () => {
+            if (!radio.checked) return;
+            document.querySelectorAll(radio.dataset.mostrar).forEach((el) => { el.hidden = false; });
+            if (radio.dataset.ocultar) {
+                document.querySelectorAll(radio.dataset.ocultar).forEach((el) => { el.hidden = true; });
+            }
+        });
+    });
+
+    // ---------- 4. Formato de pesos ----------
+    document.querySelectorAll('[data-formato-pesos]').forEach((campo) => {
+        campo.addEventListener('input', () => {
+            const digitos = campo.value.replace(/\D/g, '');
+            campo.value = digitos ? Number(digitos).toLocaleString('es-CO') : '';
         });
     });
 })();

@@ -262,6 +262,10 @@ a {
     border: 1px solid var(--ess-borde);
     border-radius: var(--ess-radio);
     padding: 1.6rem 1.6rem;
+}
+
+/* Dentro de una fila de columnas, las tarjetas se estiran para tener la misma altura */
+.row > [class*="col"] > .tarjeta {
     height: 100%;
 }
 
@@ -614,4 +618,104 @@ a {
     color: var(--ess-acento);
     line-height: 1;
     margin-bottom: 0.5rem;
+}
+
+/* ---------- 18. Clientes, vehículos y catálogo ---------- */
+/* Pestañas Clientes | Vehículos */
+.pestanas {
+    gap: 0.4rem;
+}
+
+.pestanas .nav-link {
+    color: var(--ess-texto-suave);
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+}
+
+.pestanas .nav-link:hover {
+    color: var(--ess-texto);
+    background: #E7ECEE;
+}
+
+.pestanas .nav-link.active {
+    background: var(--ess-tarjeta);
+    color: var(--ess-texto);
+    border: 1px solid var(--ess-borde);
+}
+
+/* Insignia de tipo de vehículo */
+.tipo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.tipo-carro { background: #E1EFF4; color: var(--ess-teal); }
+.tipo-moto  { background: #FDF1DC; color: var(--ess-alerta-texto); }
+
+/* Placa pequeña dentro de la lista de clientes */
+.placa-chip {
+    display: inline-block;
+    border: 1px solid var(--ess-borde);
+    border-radius: 6px;
+    padding: 0.1rem 0.45rem;
+    margin: 0.1rem 0.15rem 0.1rem 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: #F7F9FA;
+    white-space: nowrap;
+}
+
+/* Campo de placa: grande y en mayúsculas, como la placa real */
+.campo-placa {
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.resultado-placa {
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.resultado-encontrado {
+    border-left: 4px solid var(--ess-acento);
+    padding-left: 0.9rem;
+    color: var(--ess-texto);
+}
+
+.selector-tipo {
+    padding: 0.6rem 0.8rem;
+}
+
+.btn-check:checked + .selector-tipo {
+    background: var(--ess-petroleo);
+    border-color: var(--ess-petroleo);
+    color: #fff;
+}
+
+.enlace-fila {
+    color: var(--ess-texto);
+    text-decoration: none;
+}
+
+.enlace-fila:hover {
+    color: var(--ess-teal);
+    text-decoration: underline;
+}
+
+.input-group-text {
+    background: #F7F9FA;
+    border-color: var(--ess-borde);
+    color: var(--ess-texto-suave);
 }

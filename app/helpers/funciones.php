@@ -68,6 +68,67 @@ function placa_formato(string $placa): string
 }
 
 /**
+ * Normaliza una placa: mayúsculas y sin espacios ni guiones. "abc-123" -> "ABC123"
+ */
+function normalizar_placa(string $placa): string
+{
+    return preg_replace('/[^A-Z0-9]/', '', strtoupper($placa));
+}
+
+/**
+ * Teléfono legible: "3104567821" -> "310 456 7821"
+ */
+function telefono_formato(?string $telefono): string
+{
+    if (!$telefono) {
+        return '—';
+    }
+    return strlen($telefono) === 10
+        ? substr($telefono, 0, 3) . ' ' . substr($telefono, 3, 3) . ' ' . substr($telefono, 6)
+        : $telefono;
+}
+
+/**
+ * Duración legible: 30 -> "30 min", 90 -> "1 h 30 min"
+ */
+function duracion_texto(int $minutos): string
+{
+    if ($minutos < 60) {
+        return $minutos . ' min';
+    }
+    $horas = intdiv($minutos, 60);
+    $resto = $minutos % 60;
+    return $horas . ' h' . ($resto ? ' ' . $resto . ' min' : '');
+}
+
+/**
+ * Insignia con ícono para el tipo de vehículo (carro / moto).
+ */
+function tipo_badge(string $tipo): string
+{
+    $icono = $tipo === 'moto' ? 'bi-scooter' : 'bi-car-front';
+    return '<span class="tipo tipo-' . e($tipo) . '"><i class="bi ' . $icono . '"></i> '
+         . e(ucfirst($tipo)) . '</span>';
+}
+
+/**
+ * Ayudas para formularios con Bootstrap:
+ *   campo_invalido($errores, 'nombre') -> ' is-invalid' si el campo tiene error
+ *   campo_error($errores, 'nombre')    -> el mensaje de error debajo del campo
+ */
+function campo_invalido(array $errores, string $campo): string
+{
+    return isset($errores[$campo]) ? ' is-invalid' : '';
+}
+
+function campo_error(array $errores, string $campo): string
+{
+    return isset($errores[$campo])
+        ? '<div class="invalid-feedback">' . e($errores[$campo]) . '</div>'
+        : '';
+}
+
+/**
  * Texto e insignia de color para el estado de una orden.
  */
 function estado_texto(string $estado): string
