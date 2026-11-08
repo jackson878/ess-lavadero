@@ -1,0 +1,617 @@
+/* =====================================================================
+   ESS-Lavadero - Hoja de estilos principal
+   Se carga DESPUÉS de Bootstrap 5 y ajusta su apariencia al diseño
+   del sistema: barra lateral azul petróleo, acento amarillo y tarjetas.
+   ===================================================================== */
+
+/* ---------- 1. Variables de color y medidas (se cambian aquí) ---------- */
+:root {
+    --ess-petroleo: #0E2A3A;        /* color principal: barra lateral y botones */
+    --ess-petroleo-2: #17394C;      /* líneas y hover dentro de la barra */
+    --ess-acento: #F2B544;          /* amarillo: menú activo, "hoy" */
+    --ess-acento-texto: #0E2A3A;
+    --ess-teal: #0B6A85;            /* gráficas y textos destacados */
+    --ess-teal-claro: #A3C7D6;      /* barras secundarias */
+    --ess-pista: #E4EBEE;           /* fondo de las barras de progreso */
+    --ess-fondo: #F1F4F5;           /* fondo de la página */
+    --ess-tarjeta: #FFFFFF;
+    --ess-borde: #DFE6E9;
+    --ess-texto: #12222C;
+    --ess-texto-suave: #5F6F78;
+    --ess-verde: #1E7A4C;
+    --ess-ambar: #A15C07;
+    --ess-alerta-fondo: #FDF1DC;
+    --ess-alerta-texto: #7A4B00;
+    --ess-radio: 14px;
+    --ess-ancho-menu: 276px;
+
+    /* Colores de los estados de una orden */
+    --estado-espera: #6C757D;       /* gris  */
+    --estado-lavado: #1F6FB8;       /* azul  */
+    --estado-terminado: #1E7A4C;    /* verde */
+    --estado-entregado: #111111;    /* negro */
+    --estado-cancelada: #B42318;    /* rojo  */
+}
+
+/* ---------- 2. Base ---------- */
+html, body {
+    background: var(--ess-fondo);
+}
+
+body {
+    font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: var(--ess-texto);
+    font-size: 0.95rem;
+}
+
+a {
+    color: var(--ess-teal);
+}
+
+/* ---------- 3. Estructura: barra lateral + contenido ---------- */
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    /* !important: Bootstrap pone fondo transparente a .offcanvas-lg en pantallas grandes */
+    background: var(--ess-petroleo) !important;
+    color: #fff;
+    width: var(--ess-ancho-menu);
+    flex-shrink: 0;
+}
+
+/* En pantallas grandes la barra queda fija a la izquierda */
+@media (min-width: 992px) {
+    .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+    }
+}
+
+/* En celular la barra es un "offcanvas" de Bootstrap: se le da el mismo color */
+.sidebar.offcanvas-lg {
+    --bs-offcanvas-bg: var(--ess-petroleo);
+    --bs-offcanvas-color: #fff;
+    --bs-offcanvas-width: var(--ess-ancho-menu);
+}
+
+.sidebar-cuerpo {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding: 2.25rem 1.5rem 1.5rem;
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 2rem;
+    text-decoration: none;
+    color: #fff;
+}
+
+.marca:hover {
+    color: #fff;
+}
+
+.marca-icono {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--ess-acento);
+    color: var(--ess-acento-texto);
+    display: grid;
+    place-items: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.marca-nombre {
+    font-weight: 800;
+    font-size: 1.15rem;
+    line-height: 1.15;
+    display: block;
+}
+
+.marca-negocio {
+    font-size: 0.82rem;
+    color: #B9C7CF;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.menu a {
+    display: block;
+    padding: 0.8rem 1.1rem;
+    border-radius: 8px;
+    color: #DCE6EB;
+    text-decoration: none;
+    font-size: 1.02rem;
+    font-weight: 500;
+    transition: background 0.15s ease;
+}
+
+.menu a:hover {
+    background: var(--ess-petroleo-2);
+    color: #fff;
+}
+
+.menu a.activo {
+    background: var(--ess-acento);
+    color: var(--ess-acento-texto);
+    font-weight: 700;
+}
+
+.sidebar-pie {
+    margin-top: auto;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--ess-petroleo-2);
+    color: #B9C7CF;
+    font-size: 0.92rem;
+}
+
+.sidebar-pie strong {
+    color: #fff;
+}
+
+.contenido {
+    flex: 1;
+    min-width: 0;                    /* evita que tablas anchas rompan el diseño */
+    padding: 2.5rem 2.25rem 3rem;
+}
+
+/* Barra superior que solo aparece en celular (botón ☰) */
+.barra-movil {
+    background: var(--ess-petroleo);
+    color: #fff;
+}
+
+@media (max-width: 991.98px) {
+    .app {
+        flex-direction: column;
+    }
+    .contenido {
+        padding: 1.5rem 1rem 2.5rem;
+    }
+}
+
+/* ---------- 4. Encabezado de cada página ---------- */
+.ceja {
+    color: var(--ess-teal);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+}
+
+.titulo-pagina {
+    font-size: 2.1rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+@media (max-width: 575.98px) {
+    .titulo-pagina {
+        font-size: 1.6rem;
+    }
+}
+
+/* ---------- 5. Botones ---------- */
+.btn {
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0.6rem 1.15rem;
+}
+
+.btn-ess {
+    background: var(--ess-petroleo);
+    border-color: var(--ess-petroleo);
+    color: #fff;
+}
+
+.btn-ess:hover,
+.btn-ess:focus {
+    background: var(--ess-petroleo-2);
+    border-color: var(--ess-petroleo-2);
+    color: #fff;
+}
+
+.btn-ess-borde {
+    background: var(--ess-tarjeta);
+    border: 1px solid var(--ess-borde);
+    color: var(--ess-texto);
+}
+
+.btn-ess-borde:hover,
+.btn-ess-borde:focus,
+.btn-ess-borde.show {
+    background: #F7F9FA;
+    border-color: #C9D4D9;
+    color: var(--ess-texto);
+}
+
+.btn-acento {
+    background: var(--ess-acento);
+    border-color: var(--ess-acento);
+    color: var(--ess-acento-texto);
+}
+
+.btn-acento:hover {
+    background: #E5A630;
+    border-color: #E5A630;
+    color: var(--ess-acento-texto);
+}
+
+/* ---------- 6. Tarjetas ---------- */
+.tarjeta {
+    background: var(--ess-tarjeta);
+    border: 1px solid var(--ess-borde);
+    border-radius: var(--ess-radio);
+    padding: 1.6rem 1.6rem;
+    height: 100%;
+}
+
+.tarjeta-titulo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+}
+
+/* Tarjeta de indicador (KPI) */
+.kpi-etiqueta {
+    color: var(--ess-texto-suave);
+    font-size: 0.92rem;
+    margin-bottom: 0.4rem;
+}
+
+.kpi-valor {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    margin-bottom: 0.45rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 575.98px) {
+    .tarjeta {
+        padding: 1.2rem 1.1rem;
+    }
+    .kpi-valor {
+        font-size: 1.65rem;
+    }
+}
+
+.kpi-nota {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ess-texto-suave);
+}
+
+.kpi-nota.sube   { color: var(--ess-verde); }
+.kpi-nota.baja   { color: #B42318; }
+.kpi-nota.alerta { color: var(--ess-ambar); }
+.kpi-nota.neutra { font-weight: 400; }
+
+/* ---------- 7. Barras de progreso (servicios más vendidos) ---------- */
+.ranking-item + .ranking-item {
+    margin-top: 1.15rem;
+}
+
+.ranking-fila {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.45rem;
+    font-size: 1rem;
+}
+
+.ranking-fila strong {
+    font-weight: 700;
+}
+
+.pista {
+    height: 9px;
+    background: var(--ess-pista);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.pista-relleno {
+    height: 100%;
+    background: var(--ess-teal);
+    border-radius: 999px;
+}
+
+/* ---------- 8. Avisos ---------- */
+.aviso {
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.aviso-alerta {
+    background: var(--ess-alerta-fondo);
+    color: var(--ess-alerta-texto);
+}
+
+.aviso-ok {
+    background: #E6F4EC;
+    color: var(--ess-verde);
+}
+
+/* ---------- 9. Tablas ---------- */
+.tabla-ess {
+    margin-bottom: 0;
+    --bs-table-bg: transparent;
+}
+
+.tabla-ess thead th {
+    color: var(--ess-texto-suave);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--ess-borde);
+    padding: 0.8rem 0.65rem;
+    white-space: nowrap;
+}
+
+.tabla-ess tbody td {
+    padding: 0.85rem 0.65rem;
+    border-bottom: 1px solid #EDF1F3;
+    vertical-align: middle;
+    font-size: 0.98rem;
+}
+
+.tabla-ess tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.placa {
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+/* ---------- 10. Insignias de estado de la orden ---------- */
+.estado {
+    display: inline-block;
+    padding: 0.32rem 0.8rem;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.estado-en_espera { background: var(--estado-espera); }
+.estado-en_lavado { background: var(--estado-lavado); }
+.estado-terminado { background: var(--estado-terminado); }
+.estado-entregado { background: var(--estado-entregado); }
+.estado-cancelada { background: var(--estado-cancelada); }
+
+/* ---------- 11. Gráficas ---------- */
+.grafica {
+    position: relative;
+    height: 260px;
+}
+
+.grafica-nota {
+    color: var(--ess-texto-suave);
+    font-size: 0.92rem;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+/* ---------- 12. Insignias de rol ---------- */
+.rol {
+    display: inline-block;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.rol-dueno   { background: var(--ess-petroleo); color: #fff; }
+.rol-cajero  { background: #FDF1DC; color: var(--ess-alerta-texto); }
+.rol-lavador { background: #E1EFF4; color: var(--ess-teal); }
+
+/* Punto de color para Activo / Inactivo */
+.punto {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 0.45rem;
+    vertical-align: middle;
+}
+
+.punto-activo   { background: var(--ess-verde); }
+.punto-inactivo { background: #ADB5BD; }
+
+.fila-inactiva td {
+    color: var(--ess-texto-suave);
+}
+
+/* ---------- 13. Mensajes (flash) ---------- */
+.alert {
+    border: 0;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.93rem;
+}
+
+.alerta-exito { background: #E6F4EC; color: var(--ess-verde); }
+.alerta-error { background: #FDECEA; color: #B42318; }
+.alerta-aviso { background: var(--ess-alerta-fondo); color: var(--ess-alerta-texto); }
+
+/* ---------- 14. Formularios ---------- */
+.form-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.35rem;
+}
+
+.form-control,
+.form-select {
+    border-color: var(--ess-borde);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: var(--ess-teal);
+    box-shadow: 0 0 0 0.2rem rgba(11, 106, 133, 0.15);
+}
+
+.form-check-input:checked {
+    background-color: var(--ess-teal);
+    border-color: var(--ess-teal);
+}
+
+.formulario-ancho {
+    max-width: 860px;
+}
+
+.enlace-volver {
+    color: var(--ess-texto-suave);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.enlace-volver:hover {
+    color: var(--ess-teal);
+}
+
+/* Buscador con lupa para las tablas */
+.buscador {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+}
+
+.buscador .bi-search {
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ess-texto-suave);
+}
+
+.buscador .form-control {
+    padding-left: 2.3rem;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.85rem;
+}
+
+/* ---------- 15. Barra lateral: botón de cerrar sesión ---------- */
+.btn-salir {
+    background: none;
+    border: 1px solid var(--ess-petroleo-2);
+    color: #DCE6EB;
+    border-radius: 8px;
+    padding: 0.5rem 0.9rem;
+    width: 100%;
+    text-align: left;
+    font-weight: 600;
+}
+
+.btn-salir:hover {
+    background: var(--ess-petroleo-2);
+    color: #fff;
+}
+
+/* ---------- 16. Página de inicio de sesión ---------- */
+.pagina-login .barra-movil {
+    display: none !important;
+}
+
+.login-contenedor {
+    display: flex;
+    min-height: 100vh;
+}
+
+.login-panel {
+    background: var(--ess-petroleo);
+    color: #fff;
+    width: 44%;
+    max-width: 560px;
+    padding: 3rem;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.login-lema {
+    font-size: 2.3rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.login-sublema {
+    color: #B9C7CF;
+    font-size: 1.05rem;
+}
+
+.login-formulario {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.login-caja {
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-ayuda {
+    background: var(--ess-tarjeta);
+    border: 1px dashed var(--ess-borde);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+    color: var(--ess-texto-suave);
+}
+
+/* ---------- 17. Otros ---------- */
+.tarjeta-enlace {
+    text-decoration: none;
+    color: var(--ess-texto);
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.tarjeta-enlace:hover {
+    border-color: var(--ess-teal);
+    color: var(--ess-texto);
+    transform: translateY(-2px);
+}
+
+.error-codigo {
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--ess-acento);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}

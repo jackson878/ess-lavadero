@@ -1,0 +1,11 @@
+# Dependencias de Composer (se instalan con "composer install")
+/vendor/
+
+# Respaldos generados de la base de datos
+/backups/*.sql
+
+# Archivos del sistema y del editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
