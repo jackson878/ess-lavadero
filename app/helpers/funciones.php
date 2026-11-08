@@ -201,6 +201,19 @@ function tiempo_desde(string $fecha): string
 }
 
 /**
+ * Nombre e ícono de cada medio de pago.
+ */
+function metodo_texto(string $metodo): string
+{
+    return ['efectivo' => 'Efectivo', 'transferencia' => 'Nequi / transferencia', 'tarjeta' => 'Tarjeta'][$metodo] ?? $metodo;
+}
+
+function metodo_icono(string $metodo): string
+{
+    return ['efectivo' => 'bi-cash-coin', 'transferencia' => 'bi-phone', 'tarjeta' => 'bi-credit-card'][$metodo] ?? 'bi-wallet2';
+}
+
+/**
  * Texto del botón que lleva la orden a su siguiente estado.
  */
 function texto_siguiente_estado(string $estado): string

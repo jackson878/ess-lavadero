@@ -74,39 +74,89 @@ class Orden
      * Usa SELECT ... FOR UPDATE para que dos clics simultáneos no
      * avancen la orden dos veces.
      *
+     * Regla de caja (RF-05): una orden solo se ENTREGA si ya fue cobrada.
+     *
+     * Si ya hay una transacción abierta (por ejemplo, al cobrar y entregar
+     * en un mismo paso) se usa esa; si no, abre la suya.
+     *
      * @return string|null mensaje de error, o null si todo salió bien
      */
     public function cambiarEstado(int $ordenId, string $nuevo, int $usuarioId): ?string
     {
-        $this->db->beginTransaction();
-        try {
-            $stmt = $this->db->prepare('SELECT estado FROM ordenes WHERE id = :id FOR UPDATE');
-            $stmt->execute([':id' => $ordenId]);
-            $actual = $stmt->fetchColumn();
+        $propia = !$this->db->inTransaction();
+        if ($propia) {
+            $this->db->beginTransaction();
+        }
 
-            if ($actual === false) {
-                $this->db->rollBack();
-                return 'La orden no existe.';
+        try {
+            $stmt = $this->db->prepare(
+                'SELECT estado, (SELECT COUNT(*) FROM pagos WHERE orden_id = o.id) AS pagado
+                 FROM ordenes o WHERE id = :id FOR UPDATE'
+            );
+            $stmt->execute([':id' => $ordenId]);
+            $fila = $stmt->fetch();
+
+            $error = null;
+            if (!$fila) {
+                $error = 'La orden no existe.';
+            } else {
+                $actual    = $fila['estado'];
+                $permitido = ($nuevo === 'cancelada' && in_array($actual, self::CANCELABLES, true))
+                          || (self::SIGUIENTE[$actual] ?? null) === $nuevo;
+
+                if (!$permitido) {
+                    $error = 'La orden está "' . estado_texto($actual) . '" y no puede pasar a "' . estado_texto($nuevo) . '".';
+                } elseif ($nuevo === 'entregado' && !(int) $fila['pagado']) {
+                    $error = 'Primero cobre la orden en la caja; luego podrá entregar el vehículo.';
+                }
             }
 
-            $permitido = ($nuevo === 'cancelada' && in_array($actual, self::CANCELABLES, true))
-                      || (self::SIGUIENTE[$actual] ?? null) === $nuevo;
-
-            if (!$permitido) {
-                $this->db->rollBack();
-                return 'La orden está "' . estado_texto($actual) . '" y no puede pasar a "' . estado_texto($nuevo) . '".';
+            if ($error !== null) {
+                if ($propia) {
+                    $this->db->rollBack();
+                }
+                return $error;
             }
 
             $upd = $this->db->prepare('UPDATE ordenes SET estado = :estado WHERE id = :id');
             $upd->execute([':estado' => $nuevo, ':id' => $ordenId]);
             $this->registrarEstado($ordenId, $nuevo, $usuarioId);
 
-            $this->db->commit();
+            if ($propia) {
+                $this->db->commit();
+            }
             return null;
         } catch (Throwable $e) {
-            $this->db->rollBack();
+            if ($propia && $this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
             throw $e;
         }
+    }
+
+    /**
+     * Bloquea la orden para cobrarla (dentro de una transacción) y devuelve
+     * su estado, total y si ya tiene pago. Así dos cajeros no cobran la
+     * misma orden al mismo tiempo.
+     */
+    public function bloquearParaCobro(int $ordenId): ?array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT id, estado, total, (SELECT COUNT(*) FROM pagos WHERE orden_id = o.id) AS pagado
+             FROM ordenes o WHERE id = :id FOR UPDATE'
+        );
+        $stmt->execute([':id' => $ordenId]);
+        return $stmt->fetch() ?: null;
+    }
+
+    /** Órdenes terminadas que aún no se han cobrado. */
+    public function porCobrar(): array
+    {
+        $sql = self::SELECT_LISTADO . "
+                WHERE o.estado = 'terminado'
+                  AND NOT EXISTS (SELECT 1 FROM pagos p WHERE p.orden_id = o.id)
+                ORDER BY o.fecha_ingreso";
+        return $this->db->query($sql)->fetchAll();
     }
 
     /** Guarda una línea en el historial con la hora actual. */
@@ -139,7 +189,8 @@ class Orden
                   FROM orden_detalle d JOIN servicios_catalogo s ON s.id = d.servicio_id
                  WHERE d.orden_id = o.id) AS duracion_estimada,
                (SELECT MAX(e.fecha_hora) FROM orden_estados e
-                 WHERE e.orden_id = o.id AND e.estado = o.estado) AS fecha_estado
+                 WHERE e.orden_id = o.id AND e.estado = o.estado) AS fecha_estado,
+               EXISTS (SELECT 1 FROM pagos p WHERE p.orden_id = o.id) AS pagado
         FROM ordenes o
         JOIN vehiculos v ON v.id = o.vehiculo_id
         JOIN clientes c  ON c.id = v.cliente_id

@@ -27,7 +27,12 @@ $whatsapp  = $o['estado'] === 'terminado' ? whatsapp_url($o['telefono'], $o['pla
     <div class="fw-bold mt-1"><?= pesos($o['total']) ?></div>
 
     <div class="d-flex flex-wrap gap-2 mt-3">
-        <?php if ($siguiente): ?>
+        <?php if ($o['estado'] === 'terminado' && !(int) $o['pagado']): ?>
+            <!-- Terminada sin pagar: primero se cobra (al cobrar se puede entregar en el mismo paso) -->
+            <a class="btn btn-sm btn-acento" href="<?= url('caja', 'cobrar', ['id' => $o['id'], 'volver' => 'orden']) ?>">
+                <i class="bi bi-cash-coin"></i> Cobrar
+            </a>
+        <?php elseif ($siguiente): ?>
             <form method="post" action="<?= url('orden', 'estado') ?>">
                 <?= Csrf::campo() ?>
                 <input type="hidden" name="id" value="<?= (int) $o['id'] ?>">

@@ -895,3 +895,36 @@ a {
 .lista-terminados li:last-child {
     border-bottom: 0;
 }
+
+/* ---------- 21. Caja diaria ---------- */
+.fila-cobro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #EDF1F3;
+}
+
+.fila-cobro:last-child {
+    border-bottom: 0;
+}
+
+/* Diferencia del cierre: se colorea según el resultado */
+.diferencia {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    background: #F4F6F8;
+}
+
+.diferencia .valor {
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.diferencia.exacta   { background: #E6F4EC; color: var(--ess-verde); }
+.diferencia.faltante { background: #FDECEA; color: #B42318; }
+.diferencia.sobrante { background: var(--ess-alerta-fondo); color: var(--ess-alerta-texto); }

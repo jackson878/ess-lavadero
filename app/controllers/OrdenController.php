@@ -107,6 +107,7 @@ class OrdenController extends Controller
             'detalle'    => $this->modelo->detalle($id),
             'historial'  => $this->modelo->historial($id),
             'lavadores'  => $this->modelo->cargaLavadores(),
+            'pago'       => (new Pago())->deOrden($id),
         ]);
     }
 

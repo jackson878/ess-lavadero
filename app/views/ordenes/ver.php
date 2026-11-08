@@ -6,6 +6,7 @@
  * @var array $detalle    servicios con precio cobrado
  * @var array $historial  [estado, fecha_hora, usuario]
  * @var array $lavadores
+ * @var array|null $pago  cobro de la orden (null si no se ha cobrado)
  */
 require VIEWS_PATH . 'layouts/header.php';
 
@@ -29,7 +30,11 @@ $editable  = in_array($orden['estado'], Orden::CANCELABLES, true);
                     <i class="bi bi-whatsapp"></i> Avisar por WhatsApp
                 </a>
             <?php endif; ?>
-            <?php if ($siguiente): ?>
+            <?php if ($orden['estado'] === 'terminado' && !$pago): ?>
+                <a class="btn btn-acento btn-lg" href="<?= url('caja', 'cobrar', ['id' => $orden['id'], 'volver' => 'orden']) ?>">
+                    <i class="bi bi-cash-coin"></i> Cobrar
+                </a>
+            <?php elseif ($siguiente): ?>
                 <form method="post" action="<?= url('orden', 'estado') ?>">
                     <?= Csrf::campo() ?>
                     <input type="hidden" name="id" value="<?= (int) $orden['id'] ?>">
@@ -62,6 +67,15 @@ $editable  = in_array($orden['estado'], Orden::CANCELABLES, true);
             </table>
             <?php if ($orden['observaciones']): ?>
                 <p class="mb-0 mt-3"><i class="bi bi-chat-left-text"></i> <?= e($orden['observaciones']) ?></p>
+            <?php endif; ?>
+            <?php if ($pago): ?>
+                <div class="aviso aviso-ok mt-3">
+                    <i class="bi bi-check-circle"></i> Pagado: <?= pesos($pago['valor']) ?> en
+                    <?= e(mb_strtolower(metodo_texto($pago['metodo']))) ?><?= $pago['referencia'] ? ' (ref. ' . e($pago['referencia']) . ')' : '' ?>
+                    · <?= e(date('d/m/Y H:i', strtotime($pago['fecha_hora']))) ?> · <?= e($pago['cobro']) ?>
+                </div>
+            <?php elseif (in_array($orden['estado'], ['en_espera', 'en_lavado', 'terminado'], true)): ?>
+                <div class="aviso aviso-alerta mt-3"><i class="bi bi-hourglass-split"></i> Pendiente de cobro.</div>
             <?php endif; ?>
         </div>
 
