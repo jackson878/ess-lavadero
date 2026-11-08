@@ -68,6 +68,23 @@
         });
     });
 
+    // ---------- 5. Actualización automática ----------
+    // <body data-autorecarga="60"> recarga la página cada 60 s para ver
+    // los cambios de estado, pero NO mientras el usuario escribe en un campo.
+    const segundos = parseInt(document.body.dataset.autorecarga || '0', 10);
+    if (segundos > 0) {
+        const intentar = () => {
+            const activo = document.activeElement;
+            const escribiendo = activo && ['INPUT', 'SELECT', 'TEXTAREA'].includes(activo.tagName);
+            if (escribiendo || document.querySelector('.dropdown-menu.show')) {
+                setTimeout(intentar, 15000);   // se vuelve a intentar en 15 s
+            } else {
+                window.location.reload();
+            }
+        };
+        setTimeout(intentar, segundos * 1000);
+    }
+
     // ---------- 4. Formato de pesos ----------
     document.querySelectorAll('[data-formato-pesos]').forEach((campo) => {
         campo.addEventListener('input', () => {

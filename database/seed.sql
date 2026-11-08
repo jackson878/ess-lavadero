@@ -32,11 +32,11 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. Usuarios (bcrypt de 'Lavadero2026*')
 INSERT INTO usuarios (id, nombre, usuario, password_hash, rol, telefono, activo) VALUES
-(1, 'Andrés Gómez', 'dueno', '$2y$10$HnGIVgN.a7H2eHxy99COHOto.f5yFg8qR1KiPgmcAjnh82XwB3jWm', 'dueno', '3001112233', 1),
-(2, 'Laura Martínez', 'cajero', '$2y$10$HnGIVgN.a7H2eHxy99COHOto.f5yFg8qR1KiPgmcAjnh82XwB3jWm', 'cajero', '3002223344', 1),
-(3, 'Carlos Rodríguez', 'lavador', '$2y$10$HnGIVgN.a7H2eHxy99COHOto.f5yFg8qR1KiPgmcAjnh82XwB3jWm', 'lavador', '3003334455', 1),
-(4, 'Jhon Fredy Ríos', 'lavador2', '$2y$10$HnGIVgN.a7H2eHxy99COHOto.f5yFg8qR1KiPgmcAjnh82XwB3jWm', 'lavador', '3004445566', 1),
-(5, 'Brayan Castaño', 'lavador3', '$2y$10$HnGIVgN.a7H2eHxy99COHOto.f5yFg8qR1KiPgmcAjnh82XwB3jWm', 'lavador', '3005556677', 1);
+(1, 'Andrés Gómez', 'dueno', '$2y$10$.bZUNjBaukQT9OCN88kXEeBaoWisGu79E7AjySzNPC0e9W49zhRK2', 'dueno', '3001112233', 1),
+(2, 'Laura Martínez', 'cajero', '$2y$10$.bZUNjBaukQT9OCN88kXEeBaoWisGu79E7AjySzNPC0e9W49zhRK2', 'cajero', '3002223344', 1),
+(3, 'Carlos Rodríguez', 'lavador', '$2y$10$.bZUNjBaukQT9OCN88kXEeBaoWisGu79E7AjySzNPC0e9W49zhRK2', 'lavador', '3003334455', 1),
+(4, 'Jhon Fredy Ríos', 'lavador2', '$2y$10$.bZUNjBaukQT9OCN88kXEeBaoWisGu79E7AjySzNPC0e9W49zhRK2', 'lavador', '3004445566', 1),
+(5, 'Brayan Castaño', 'lavador3', '$2y$10$.bZUNjBaukQT9OCN88kXEeBaoWisGu79E7AjySzNPC0e9W49zhRK2', 'lavador', '3005556677', 1);
 
 -- 2. Clientes (10)
 INSERT INTO clientes (id, nombre, telefono, creado_en) VALUES
@@ -138,10 +138,10 @@ INSERT INTO ordenes (id, vehiculo_id, lavador_id, creado_por, estado, total, fec
 (54, 8, 4, 2, 'entregado', 35000, TIMESTAMP(CURDATE() - INTERVAL 1 DAY, '13:34:00')),
 (55, 6, 4, 2, 'entregado', 27000, TIMESTAMP(CURDATE() - INTERVAL 1 DAY, '13:55:00')),
 (56, 3, 4, 2, 'entregado', 12000, TIMESTAMP(CURDATE() - INTERVAL 1 DAY, '15:33:00')),
-(57, 1, 3, 2, 'terminado', 25000, TIMESTAMP(CURDATE() - INTERVAL 0 DAY, '08:16:00')),
-(58, 4, 4, 2, 'en_lavado', 35000, TIMESTAMP(CURDATE() - INTERVAL 0 DAY, '09:03:00')),
-(59, 9, 3, 2, 'en_espera', 27000, TIMESTAMP(CURDATE() - INTERVAL 0 DAY, '09:16:00')),
-(60, 10, 3, 2, 'en_espera', 90000, TIMESTAMP(CURDATE() - INTERVAL 0 DAY, '09:55:00'));
+(57, 1, 3, 2, 'terminado', 25000, GREATEST(CURDATE(), NOW() - INTERVAL 164 MINUTE)),
+(58, 4, 4, 2, 'en_lavado', 35000, GREATEST(CURDATE(), NOW() - INTERVAL 117 MINUTE)),
+(59, 9, 3, 2, 'en_espera', 27000, GREATEST(CURDATE(), NOW() - INTERVAL 104 MINUTE)),
+(60, 10, 3, 2, 'en_espera', 90000, GREATEST(CURDATE(), NOW() - INTERVAL 65 MINUTE));
 
 -- 6. Detalle de las órdenes
 INSERT INTO orden_detalle (orden_id, servicio_id, precio) VALUES
@@ -445,13 +445,13 @@ INSERT INTO orden_estados (orden_id, estado, usuario_id, fecha_hora) VALUES
 (56, 'en_lavado', 4, TIMESTAMP(CURDATE() - INTERVAL 1 DAY, '15:52:00')),
 (56, 'terminado', 4, TIMESTAMP(CURDATE() - INTERVAL 1 DAY, '16:12:00')),
 (56, 'entregado', 2, TIMESTAMP(CURDATE() - INTERVAL 1 DAY, '16:27:00')),
-(57, 'en_espera', 2, TIMESTAMP(CURDATE() - INTERVAL 0 DAY, '08:16:00')),
-(57, 'en_lavado', 3, TIMESTAMP(CURDATE() - INTERVAL 0 DAY, '08:39:00')),
-(57, 'terminado', 3, TIMESTAMP(CURDATE() - INTERVAL 0 DAY, '09:14:00')),
-(58, 'en_espera', 2, TIMESTAMP(CURDATE() - INTERVAL 0 DAY, '09:03:00')),
-(58, 'en_lavado', 4, TIMESTAMP(CURDATE() - INTERVAL 0 DAY, '09:26:00')),
-(59, 'en_espera', 2, TIMESTAMP(CURDATE() - INTERVAL 0 DAY, '09:16:00')),
-(60, 'en_espera', 2, TIMESTAMP(CURDATE() - INTERVAL 0 DAY, '09:55:00'));
+(57, 'en_espera', 2, GREATEST(CURDATE(), NOW() - INTERVAL 164 MINUTE)),
+(57, 'en_lavado', 3, GREATEST(CURDATE(), NOW() - INTERVAL 141 MINUTE)),
+(57, 'terminado', 3, GREATEST(CURDATE(), NOW() - INTERVAL 106 MINUTE)),
+(58, 'en_espera', 2, GREATEST(CURDATE(), NOW() - INTERVAL 117 MINUTE)),
+(58, 'en_lavado', 4, GREATEST(CURDATE(), NOW() - INTERVAL 94 MINUTE)),
+(59, 'en_espera', 2, GREATEST(CURDATE(), NOW() - INTERVAL 104 MINUTE)),
+(60, 'en_espera', 2, GREATEST(CURDATE(), NOW() - INTERVAL 65 MINUTE));
 
 -- 8. Cajas diarias cerradas (hoy NO hay caja abierta: sirve para probar la apertura)
 INSERT INTO caja_aperturas_cierres (id, fecha, usuario_apertura_id, fecha_apertura, base_inicial, estado,

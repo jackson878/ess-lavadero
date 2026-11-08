@@ -61,6 +61,14 @@ class Cliente
         return $stmt->fetch() ?: null;
     }
 
+    /** Primer cliente con ese teléfono (para no duplicar clientes al registrar una orden). */
+    public function buscarPorTelefono(string $telefono): ?array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM clientes WHERE telefono = :telefono ORDER BY id LIMIT 1');
+        $stmt->execute([':telefono' => $telefono]);
+        return $stmt->fetch() ?: null;
+    }
+
     public function crear(array $d): int
     {
         $stmt = $this->db->prepare('INSERT INTO clientes (nombre, telefono) VALUES (:nombre, :telefono)');

@@ -166,14 +166,50 @@ function rol_badge(string $rol): string
 
 /**
  * Página a la que llega cada rol después de iniciar sesión: [controlador, acción].
- * (Cajero y Lavador tendrán su pantalla propia en las fases 4 y 5.)
  */
 function ruta_inicio(string $rol): array
 {
     return match ($rol) {
-        'dueno' => ['tablero', 'index'],
-        default => ['inicio', 'index'],
+        'dueno'   => ['tablero', 'index'],
+        'cajero'  => ['orden', 'index'],
+        'lavador' => ['lavador', 'index'],
+        default   => ['inicio', 'index'],
     };
+}
+
+/**
+ * Enlace de WhatsApp para avisar que el vehículo está listo (RF-10).
+ * Devuelve null si el teléfono no es un celular (WhatsApp solo funciona con celulares).
+ *   https://wa.me/573104567821?text=Su%20veh%C3%ADculo%20KLM%20905%20est%C3%A1%20listo
+ */
+function whatsapp_url(?string $telefono, string $placa): ?string
+{
+    if (!$telefono || !preg_match('/^3\d{9}$/', $telefono)) {
+        return null;
+    }
+    $mensaje = 'Su vehículo ' . placa_formato($placa) . ' está listo';
+    return 'https://wa.me/' . WHATSAPP_PREFIJO . $telefono . '?text=' . rawurlencode($mensaje);
+}
+
+/**
+ * Tiempo transcurrido desde una fecha: "8 min", "1 h 25 min"
+ */
+function tiempo_desde(string $fecha): string
+{
+    $minutos = max(0, (int) floor((time() - strtotime($fecha)) / 60));
+    return duracion_texto($minutos);
+}
+
+/**
+ * Texto del botón que lleva la orden a su siguiente estado.
+ */
+function texto_siguiente_estado(string $estado): string
+{
+    return [
+        'en_espera' => 'Empezar lavado',
+        'en_lavado' => 'Marcar terminado',
+        'terminado' => 'Entregar',
+    ][$estado] ?? '';
 }
 
 /**

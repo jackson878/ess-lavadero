@@ -29,7 +29,7 @@ $rolActual     = $usuarioActual['rol'] ?? '';
     <!-- Estilos propios del sistema -->
     <link href="<?= recurso('css/estilos.css') ?>" rel="stylesheet">
 </head>
-<body>
+<body<?= !empty($autorecarga) ? ' data-autorecarga="' . (int) $autorecarga . '"' : '' ?>>
 
 <!-- Barra superior: solo visible en celular, con el botón para abrir el menú -->
 <nav class="barra-movil d-lg-none d-flex align-items-center justify-content-between px-3 py-2">

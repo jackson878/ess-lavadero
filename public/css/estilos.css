@@ -264,8 +264,9 @@ a {
     padding: 1.6rem 1.6rem;
 }
 
-/* Dentro de una fila de columnas, las tarjetas se estiran para tener la misma altura */
-.row > [class*="col"] > .tarjeta {
+/* Dentro de una fila de columnas, una tarjeta SOLA se estira para que todas
+   las columnas tengan la misma altura (si hay varias apiladas, no). */
+.row > [class*="col"] > .tarjeta:only-child {
     height: 100%;
 }
 
@@ -718,4 +719,179 @@ a {
     background: #F7F9FA;
     border-color: var(--ess-borde);
     color: var(--ess-texto-suave);
+}
+
+/* ---------- 19. Órdenes de servicio ---------- */
+/* Columnas por estado (en espera / en lavado / terminado) */
+.columna-estado {
+    background: #E8EDF0;
+    border-radius: var(--ess-radio);
+    padding: 0.9rem;
+    height: 100%;
+    min-height: 140px;
+}
+
+.orden-tarjeta {
+    background: var(--ess-tarjeta);
+    border: 1px solid var(--ess-borde);
+    border-left-width: 5px;
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+}
+
+.orden-tarjeta + .orden-tarjeta {
+    margin-top: 0.6rem;
+}
+
+/* Borde izquierdo del color del estado */
+.estado-borde-en_espera { border-left-color: var(--estado-espera) !important; }
+.estado-borde-en_lavado { border-left-color: var(--estado-lavado) !important; }
+.estado-borde-terminado { border-left-color: var(--estado-terminado) !important; }
+.estado-borde-entregado { border-left-color: var(--estado-entregado) !important; }
+.estado-borde-cancelada { border-left-color: var(--estado-cancelada) !important; }
+
+.btn-whatsapp {
+    background: #1FA855;
+    border-color: #1FA855;
+    color: #fff;
+}
+
+.btn-whatsapp:hover {
+    background: #178A45;
+    border-color: #178A45;
+    color: #fff;
+}
+
+.btn-exito {
+    background: var(--ess-verde);
+    border-color: var(--ess-verde);
+    color: #fff;
+}
+
+.btn-exito:hover {
+    background: #17633D;
+    border-color: #17633D;
+    color: #fff;
+}
+
+/* Formulario "Nuevo servicio" */
+.paso {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.paso span {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--ess-acento);
+    color: var(--ess-acento-texto);
+    display: grid;
+    place-items: center;
+    font-size: 0.9rem;
+}
+
+.campo-placa-grande {
+    font-size: 1.8rem;
+    max-width: 320px;
+}
+
+.vehiculo-encontrado {
+    border-left: 4px solid var(--ess-acento);
+    background: #FFFBF1;
+    border-radius: 0 10px 10px 0;
+    padding: 0.8rem 1rem;
+}
+
+/* Opciones de servicio y lavador: tarjetas que se marcan al hacer clic */
+.opcion-servicio,
+.opcion-lavador {
+    display: block;
+    border: 2px solid var(--ess-borde);
+    border-radius: 10px;
+    padding: 0.8rem 0.9rem;
+    cursor: pointer;
+    background: var(--ess-tarjeta);
+    transition: border-color 0.15s ease, background 0.15s ease;
+    height: 100%;
+    user-select: none;
+}
+
+.opcion-lavador {
+    min-width: 130px;
+}
+
+.opcion-servicio:hover,
+.opcion-lavador:hover {
+    border-color: var(--ess-teal-claro);
+}
+
+.btn-check:checked + .opcion-servicio,
+.btn-check:checked + .opcion-lavador {
+    border-color: var(--ess-teal);
+    background: #EAF4F7;
+    box-shadow: inset 0 0 0 1px var(--ess-teal);
+}
+
+.btn-check:focus-visible + .opcion-servicio,
+.btn-check:focus-visible + .opcion-lavador {
+    outline: 3px solid rgba(11, 106, 133, 0.35);
+}
+
+@media (min-width: 992px) {
+    .resumen-orden {
+        position: sticky;
+        top: 1.5rem;
+        height: auto !important;
+    }
+}
+
+/* Detalle de la orden */
+.datos dt {
+    font-weight: 600;
+    color: var(--ess-texto-suave);
+    margin-bottom: 0.6rem;
+}
+
+.datos dd {
+    margin-bottom: 0.6rem;
+}
+
+.linea-tiempo {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.linea-tiempo li {
+    border-left: 4px solid var(--ess-borde);
+    padding: 0.3rem 0 0.9rem 0.9rem;
+}
+
+/* ---------- 20. Vista del lavador (celular) ---------- */
+.tarjeta-lavador {
+    border-left-width: 6px;
+}
+
+.placa-grande {
+    font-size: 1.9rem;
+    line-height: 1.1;
+}
+
+.boton-lavador {
+    padding: 0.95rem;
+    font-size: 1.15rem;
+}
+
+.lista-terminados li {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #EDF1F3;
+}
+
+.lista-terminados li:last-child {
+    border-bottom: 0;
 }

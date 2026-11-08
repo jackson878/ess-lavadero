@@ -54,7 +54,17 @@ class ServicioCatalogo
         return $this->db->query($sql)->fetchAll();
     }
 
-    /** Servicios activos para un tipo de vehículo (se usará al crear órdenes). */
+    /** Todos los servicios activos (carro y moto), para el formulario de orden. */
+    public function activos(): array
+    {
+        $sql = "SELECT id, nombre, tipo_vehiculo, precio, duracion_min
+                FROM servicios_catalogo
+                WHERE activo = 1
+                ORDER BY tipo_vehiculo, precio";
+        return $this->db->query($sql)->fetchAll();
+    }
+
+    /** Servicios activos para un tipo de vehículo. */
     public function activosPorTipo(string $tipo): array
     {
         $sql = "SELECT id, nombre, precio, duracion_min

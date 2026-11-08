@@ -142,6 +142,8 @@ class VehiculoController extends Controller
                 'nombre'   => $vehiculo['cliente_nombre'],
                 'telefono' => $vehiculo['cliente_telefono'],
             ],
+            // Si el vehículo ya está en el lavadero, el formulario de orden lo avisa de inmediato
+            'orden_activa' => (new Orden())->ordenActivaDeVehiculo((int) $vehiculo['id']),
         ], JSON_UNESCAPED_UNICODE);
     }
 
