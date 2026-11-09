@@ -201,6 +201,73 @@ function tiempo_desde(string $fecha): string
 }
 
 /**
+ * Cantidad sin ceros sobrantes: 12.00 -> "12", 1.50 -> "1,5"
+ */
+function cantidad_formato($cantidad): string
+{
+    return rtrim(rtrim(number_format((float) $cantidad, 2, ',', '.'), '0'), ',');
+}
+
+/**
+ * Cantidad con su unidad en singular o plural: (3, 'unidad') -> "3 unidades", (1, 'litro') -> "1 litro"
+ */
+function cantidad_unidad($cantidad, string $unidad): string
+{
+    $plurales = ['litro' => 'litros', 'galón' => 'galones', 'unidad' => 'unidades',
+                 'paquete' => 'paquetes', 'caja' => 'cajas', 'kg' => 'kg'];
+    $texto = (float) $cantidad == 1 ? $unidad : ($plurales[$unidad] ?? $unidad);
+    return cantidad_formato($cantidad) . ' ' . $texto;
+}
+
+/**
+ * Lee una cantidad escrita con coma o punto decimal: "1,5" -> 1.5
+ * Devuelve null si no es un número.
+ */
+function leer_cantidad(string $texto): ?float
+{
+    $texto = str_replace(',', '.', trim($texto));
+    return is_numeric($texto) ? round((float) $texto, 2) : null;
+}
+
+/**
+ * ¿Es una fecha válida con formato AAAA-MM-DD?
+ */
+function fecha_valida(string $fecha): bool
+{
+    $d = DateTime::createFromFormat('Y-m-d', $fecha);
+    return $d !== false && $d->format('Y-m-d') === $fecha;
+}
+
+/**
+ * Nombre visible de los tipos y estados de equipo.
+ */
+function equipo_tipo_texto(string $tipo): string
+{
+    return ucfirst($tipo);
+}
+
+function equipo_estado_texto(string $estado): string
+{
+    return ['operativo' => 'Operativo', 'en_mantenimiento' => 'En mantenimiento',
+            'fuera_de_servicio' => 'Fuera de servicio'][$estado] ?? $estado;
+}
+
+/**
+ * Insignia de la alerta de mantenimiento según los días que faltan.
+ */
+function mantenimiento_badge($dias): string
+{
+    $alerta = Equipo::alerta($dias);
+    $texto = match ($alerta) {
+        'vencido'   => 'Vencido hace ' . abs((int) $dias) . ' ' . (abs((int) $dias) === 1 ? 'día' : 'días'),
+        'proximo'   => (int) $dias === 0 ? 'Hoy' : 'En ' . (int) $dias . ' ' . ((int) $dias === 1 ? 'día' : 'días'),
+        'al_dia'    => 'En ' . (int) $dias . ' días',
+        default     => 'Sin programar',
+    };
+    return '<span class="alerta-mant alerta-' . $alerta . '">' . e($texto) . '</span>';
+}
+
+/**
  * Nombre e ícono de cada medio de pago.
  */
 function metodo_texto(string $metodo): string

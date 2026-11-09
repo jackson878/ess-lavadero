@@ -928,3 +928,69 @@ a {
 .diferencia.exacta   { background: #E6F4EC; color: var(--ess-verde); }
 .diferencia.faltante { background: #FDECEA; color: #B42318; }
 .diferencia.sobrante { background: var(--ess-alerta-fondo); color: var(--ess-alerta-texto); }
+
+/* ---------- 22. Insumos: alerta de stock mínimo ---------- */
+.fila-alerta td {
+    background: #FFF6F5;
+}
+
+.badge-bajo {
+    background: #FDECEA;
+    color: #B42318;
+    border-radius: 999px;
+    padding: 0.1rem 0.55rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.pista-relleno.relleno-alerta {
+    background: #D92D20;
+}
+
+.tarjeta-alerta {
+    border-color: #F5B5AE;
+    background: #FFF8F7;
+}
+
+/* ---------- 23. Equipos: estado y alerta de mantenimiento ---------- */
+.estado-equipo {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 0.22rem 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.estado-equipo-operativo         { background: #E6F4EC; color: var(--ess-verde); }
+.estado-equipo-en_mantenimiento  { background: var(--ess-alerta-fondo); color: var(--ess-alerta-texto); }
+.estado-equipo-fuera_de_servicio { background: #FDECEA; color: #B42318; }
+
+.alerta-mant {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.alerta-mant::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.alerta-vencido   { color: #B42318; }
+.alerta-proximo   { color: var(--ess-ambar); }
+.alerta-al_dia    { color: var(--ess-verde); }
+.alerta-sin_fecha { color: var(--ess-texto-suave); }
+
+/* Borde superior de la tarjeta según la alerta */
+.equipo-vencido { border-top: 4px solid #D92D20; }
+.equipo-proximo { border-top: 4px solid var(--ess-acento); }
+
+.linea-tiempo li.mant-preventivo { border-left-color: var(--ess-teal); }
+.linea-tiempo li.mant-correctivo { border-left-color: #D92D20; }
