@@ -12,7 +12,7 @@
 // ---------------------------------------------------------------
 define('APP_NOMBRE', 'ESS-Lavadero');
 define('APP_VERSION', '1.0.0');
-define('NEGOCIO_NOMBRE', '[Nombre del Lavadero]');   // cámbielo por el nombre real
+define('NEGOCIO_NOMBRE', 'Lava Autos');              // nombre del lavadero (barra lateral, login y reportes)
 
 // ---------------------------------------------------------------
 // Entorno: 'desarrollo' muestra errores en pantalla; 'produccion' los oculta
