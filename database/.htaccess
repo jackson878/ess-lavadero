@@ -1,0 +1,3 @@
+# Carpeta interna: no se puede abrir desde el navegador.
+# Todo se atiende a traves de index.php.
+Require all denied

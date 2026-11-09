@@ -19,9 +19,16 @@ $diferencia = (float) $caja['diferencia'];
             <div class="ceja">Caja <?= $cerrada ? 'cerrada' : 'abierta' ?></div>
             <h1 class="titulo-pagina"><?= e(ucfirst(fecha_larga($caja['fecha']))) ?> de <?= e(date('Y', strtotime($caja['fecha']))) ?></h1>
         </div>
-        <?php if (!$cerrada): ?>
-            <a class="btn btn-ess" href="<?= url('caja', 'cerrar', ['id' => $caja['id']]) ?>"><i class="bi bi-lock"></i> Cerrar caja</a>
-        <?php endif; ?>
+        <div class="d-flex flex-wrap gap-2">
+            <?php if (($usuarioActual['rol'] ?? '') === 'dueno'): ?>
+                <!-- Reporte de cierre (RF-08): solo el Dueño ve los reportes -->
+                <a class="btn btn-ess-borde" target="_blank" href="<?= url('reporte', 'cierre', ['id' => $caja['id'], 'formato' => 'pdf']) ?>"><i class="bi bi-file-earmark-pdf"></i> PDF</a>
+                <a class="btn btn-ess-borde" href="<?= url('reporte', 'cierre', ['id' => $caja['id'], 'formato' => 'excel']) ?>"><i class="bi bi-file-earmark-excel"></i> Excel</a>
+            <?php endif; ?>
+            <?php if (!$cerrada): ?>
+                <a class="btn btn-ess" href="<?= url('caja', 'cerrar', ['id' => $caja['id']]) ?>"><i class="bi bi-lock"></i> Cerrar caja</a>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 

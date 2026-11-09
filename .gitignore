@@ -1,5 +1,10 @@
 # Dependencias de Composer (se instalan con "composer install")
-/vendor/
+/vendor/*
+!/vendor/.htaccess
+
+# Composer descargado localmente (tools/composer.phar)
+/tools/*
+!/tools/.htaccess
 
 # Respaldos generados de la base de datos
 /backups/*.sql

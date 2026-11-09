@@ -18,6 +18,11 @@ require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/app/helpers/funciones.php';
 
+// Librerías de Composer (Dompdf y PhpSpreadsheet para los reportes)
+if (is_file(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
+
 // ---------------------------------------------------------------
 // 1. Autocargador: al usar "new UsuarioController()" PHP busca el
 //    archivo con ese nombre en estas carpetas, sin escribir require.
