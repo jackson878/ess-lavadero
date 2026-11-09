@@ -293,32 +293,23 @@ function texto_siguiente_estado(string $estado): string
 }
 
 /**
- * Texto y clase CSS para comparar un KPI de hoy con el mismo día de la semana pasada.
- *  - 'cantidad'   -> "▲ 4 más que el sábado pasado"
- *  - 'porcentaje' -> "▲ 12 % vs. semana pasada"
+ * Variación de un KPI frente al periodo anterior de la misma duración.
+ *   variacion_kpi(120, 100) -> ['▲ 20 % vs. periodo anterior', 'sube']
+ * Con $menorEsMejor (por ejemplo, el tiempo de atención) bajar se pinta en verde.
  *
- * @return array{0:string, 1:string} [texto, clase]
+ * @return array{0:string, 1:string} [texto, clase CSS]
  */
-function comparacion_kpi(float $hoy, float $antes, string $tipo): array
+function variacion_kpi(?float $actual, ?float $anterior, bool $menorEsMejor = false): array
 {
-    $dia = DIAS_SEMANA[(int) date('w')];
-
-    if ($tipo === 'cantidad') {
-        $diferencia = (int) ($hoy - $antes);
-        if ($diferencia === 0) {
-            return ['Igual que el ' . $dia . ' pasado', 'neutra'];
-        }
-        $texto = ($diferencia > 0 ? '▲ ' : '▼ ') . abs($diferencia)
-               . ($diferencia > 0 ? ' más' : ' menos') . ' que el ' . $dia . ' pasado';
-        return [$texto, $diferencia > 0 ? 'sube' : 'baja'];
+    if ($actual === null || $anterior === null || $anterior <= 0) {
+        return ['Sin datos del periodo anterior', 'neutra'];
     }
-
-    if ($antes <= 0) {
-        return ['Sin ventas el ' . $dia . ' pasado', 'neutra'];
+    $porcentaje = (int) round(($actual - $anterior) / $anterior * 100);
+    if ($porcentaje === 0) {
+        return ['Igual que el periodo anterior', 'neutra'];
     }
-    $porcentaje = (int) round(($hoy - $antes) / $antes * 100);
-    return [($porcentaje >= 0 ? '▲ ' : '▼ ') . abs($porcentaje) . ' % vs. semana pasada',
-            $porcentaje >= 0 ? 'sube' : 'baja'];
+    $mejora = $menorEsMejor ? $porcentaje < 0 : $porcentaje > 0;
+    return [($porcentaje > 0 ? '▲ ' : '▼ ') . abs($porcentaje) . ' % vs. periodo anterior', $mejora ? 'sube' : 'baja'];
 }
 
 /**
